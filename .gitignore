@@ -1,0 +1,4 @@
+inventory.yml
+
+# common Ansible temp files
+*.retry

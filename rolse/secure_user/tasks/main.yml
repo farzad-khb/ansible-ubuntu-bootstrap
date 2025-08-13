@@ -2,7 +2,7 @@
 - name: "Create a new user with sudo privileges"
   ansible.builtin.user:
     name: "{{ new_username }}"
-    password: "{{ new_user_password }}" # This var comes from the vars_prompt in site.yml
+    password: "{{ new_user_password }}" 
     groups: sudo
     shell: /bin/bash
     state: present

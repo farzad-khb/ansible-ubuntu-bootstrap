@@ -6,12 +6,11 @@
     proto: "{{ item.proto | default(omit) }}"
     state: enabled
   loop:
-    # We need to get the SSH port variable from the other role's context
     - { rule: 'allow', port: '{{ new_ssh_port }}', proto: 'tcp' }
     - { rule: 'allow', port: '80', proto: 'tcp' }
     - { rule: 'allow', port: '443', proto: 'tcp' }
     - { rule: 'deny', direction: 'incoming' }
   vars:
-    # Make the variable from the ssh_hardening role available here
+    # make the variable from the ssh_hardening role available here
     new_ssh_port: "{{ hostvars[inventory_hostname]['new_ssh_port'] | default(2222) }}"
   notify: Enable UFW
