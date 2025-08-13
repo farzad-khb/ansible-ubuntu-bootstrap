@@ -6,6 +6,7 @@
   hosts: servers
   remote_user: root
   become: true
+  tags: bootstrap
   gather_facts: false
 
   tasks:
@@ -22,6 +23,7 @@
   hosts: servers
   remote_user: root
   become: true
+  tags: bootstrap
   gather_facts: false
 
   pre_tasks:
@@ -40,6 +42,7 @@
 - name: "Configure Server"
   hosts: servers
   remote_user: "{{ bootstrap_user }}"
+  tags: configure
   become: true
 
   roles:
