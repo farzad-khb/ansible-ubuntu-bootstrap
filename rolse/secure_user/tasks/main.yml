@@ -1,0 +1,15 @@
+---
+- name: "Create a new user with sudo privileges"
+  ansible.builtin.user:
+    name: "{{ new_username }}"
+    password: "{{ new_user_password }}" # This var comes from the vars_prompt in site.yml
+    groups: sudo
+    shell: /bin/bash
+    state: present
+    create_home: yes
+
+- name: "Add SSH public key for the new user"
+  ansible.posix.authorized_key:
+    user: "{{ new_username }}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

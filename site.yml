@@ -1,0 +1,19 @@
+
+---
+- name: "Apply Common Server Configuration"
+  hosts: servers
+  become: true
+
+  vars_prompt:
+    - name: "new_user_password"
+      prompt: "Enter a strong password for the new sudo user"
+      private: yes
+      encrypt: "sha512_crypt"
+      confirm: yes
+      salt_size: 7
+
+  roles:
+    - common
+    - secure_user
+    - ssh_hardening
+    - ufw

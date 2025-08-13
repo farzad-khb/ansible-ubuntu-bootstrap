@@ -1,0 +1,13 @@
+---
+- name: "Harden SSH configuration"
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -t %s'
+  loop:
+    - { regexp: '^#?Port', line: 'Port {{ new_ssh_port }}' }
+    - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin no' }
+    - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication no' }
+  notify: Restart SSH

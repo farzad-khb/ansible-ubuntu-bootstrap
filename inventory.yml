@@ -1,0 +1,6 @@
+all:
+  children:
+    servers:
+      hosts:
+        your_server_name:
+          ansible_host: 192.0.2.100
