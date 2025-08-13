@@ -1,19 +1,48 @@
-
 ---
-- name: "Apply Common Server Configuration"
+# ==============================================================================
+# PLAY 0: Bootstrap the Python environment for Ansible
+# ==============================================================================
+- name: "Bootstrap Python Environment"
   hosts: servers
+  remote_user: root
   become: true
+  gather_facts: false
 
-  vars_prompt:
-    - name: "new_user_password"
-      prompt: "Enter a strong password for the new sudo user"
-      private: yes
-      encrypt: "sha512_crypt"
-      confirm: yes
-      salt_size: 7
+  tasks:
+    - name: "Install python3-pip using raw command"
+      ansible.builtin.raw: apt-get update && apt-get install -y python3-pip
+      changed_when: false
+      tags:
+        - always
+
+# ==============================================================================
+# PLAY 1: Bootstrap the admin user if they don't exist
+# ==============================================================================
+- name: "Bootstrap Admin User"
+  hosts: servers
+  remote_user: root
+  become: true
+  gather_facts: false
+
+  pre_tasks:
+    - name: "Check if '{{ bootstrap_user }}' already exists"
+      ansible.builtin.stat:
+        path: "/home/{{ bootstrap_user }}"
+      register: user_check
+
+  roles:
+    - role: secure_user
+      when: not user_check.stat.exists
+
+# ==============================================================================
+# PLAY 2: Configure the server as the new admin user
+# ==============================================================================
+- name: "Configure Server"
+  hosts: servers
+  remote_user: "{{ bootstrap_user }}"
+  become: true
 
   roles:
     - common
-    - secure_user
     - ssh_hardening
     - ufw

@@ -1,0 +1,21 @@
+---
+- name: "Prompt for the new user's password"
+  ansible.builtin.pause:
+    prompt: "Please enter the password for the new user '{{ bootstrap_user }}'"
+    echo: no
+  register: password_prompt_result
+
+- name: "Create a new user with sudo privileges"
+  ansible.builtin.user:
+    name: "{{ bootstrap_user }}"
+    password: "{{ password_prompt_result.user_input | password_hash('sha512') }}"
+    groups: sudo
+    shell: /bin/bash
+    state: present
+    create_home: yes
+
+- name: "Add SSH public key for the new user"
+  ansible.posix.authorized_key:
+    user: "{{ bootstrap_user }}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

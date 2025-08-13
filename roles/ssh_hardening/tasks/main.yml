@@ -1,0 +1,27 @@
+---
+- name: "Disable and stop the SSH socket if it exists"
+  ansible.builtin.systemd:
+    name: ssh.socket
+    state: stopped
+    enabled: false
+    masked: true 
+  ignore_errors: true
+
+- name: "Harden SSH configuration"
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -t -f %s'
+  loop:
+    - { regexp: '^#?Port', line: 'Port {{ new_ssh_port }}' }
+    - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin no' }
+    - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication no' }
+  notify: Restart SSH
+
+- name: "Ensure the ssh service is running and enabled (for traditional startup)"
+  ansible.builtin.systemd:
+    name: ssh.service
+    state: started
+    enabled: true
