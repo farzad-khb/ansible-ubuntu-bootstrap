@@ -18,6 +18,7 @@
     - { regexp: '^#?Port', line: 'Port {{ new_ssh_port }}' }
     - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin no' }
     - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication no' }
+    - { regexp: '^#?PubkeyAuthentication', line: 'PubkeyAuthentication yes' } 
   notify: Restart SSH
 
 - name: "Ensure the ssh service is running and enabled (for traditional startup)"
