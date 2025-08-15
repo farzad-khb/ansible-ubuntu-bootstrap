@@ -1,0 +1,17 @@
+---
+# --- Base Server Configuration ---
+bootstrap_user: "remoteadmin"
+new_ssh_port: 2222
+
+# --- Traefik Configuration ---
+# Your main domain name
+traefik_domain: "x.net"
+
+# The email address for Let's Encrypt SSL certificates
+acme_email: "your-email@example.com"
+
+# The htpasswd-generated user/password for the Traefik dashboard.
+# Generate this on your local machine with: htpasswd -nb your_user your_password
+# escape $ with another $
+# Example: 'admin:$$apr1$$...'
+dashboard_auth_users: ""

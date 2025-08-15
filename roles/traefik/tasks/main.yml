@@ -1,0 +1,32 @@
+---
+- name: "Define traefik configuration path"
+  ansible.builtin.set_fact:
+    traefik_path: "/home/{{ bootstrap_user }}/infra/traefik"
+
+- name: "Create Traefik directory in user's home"
+  ansible.builtin.file:
+    path: "{{ traefik_path }}"
+    state: directory
+    owner: "{{ bootstrap_user }}" 
+    group: "{{ bootstrap_user }}"
+    mode: '0755'
+
+- name: "Create acme.json file for SSL certificates"
+  ansible.builtin.file:
+    path: "{{ traefik_path }}/acme.json"
+    state: touch
+    owner: "{{ bootstrap_user }}"
+    group: "{{ bootstrap_user }}"
+    mode: '0600'
+
+- name: "Template the Traefik docker-compose.yml file"
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ traefik_path }}/docker-compose.yml"
+    owner: "{{ bootstrap_user }}"
+    group: "{{ bootstrap_user }}"
+    mode: '0644'
+
+- name: "Start the Traefik service using Docker Compose"
+  community.docker.docker_compose_v2:
+    project_src: "{{ traefik_path }}"

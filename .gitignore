@@ -2,3 +2,6 @@ inventory.yml
 
 # common Ansible temp files
 *.retry
+
+# Ignore private variables
+group_vars/servers.yml

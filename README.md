@@ -86,3 +86,16 @@ ansible-playbook site.yml -K --skip-tags bootstrap
 ```
 
 This command will connect as your new admin user (via its SSH key) and will only prompt for the `BECOME password:` (your user's sudo password).
+
+### 3. Deploying Infrastructure Services Only
+
+If the base server is already configured and you only want to install or re-apply the configuration for **Docker** and **Traefik**, you can use the infra tag.
+
+This command targets only the docker and traefik roles, skipping all other base system setup tasks.
+Bash
+
+```bash
+ansible-playbook site.yml -K --tags infra
+```
+
+You will be prompted for your user's sudo password (`BECOME password:`).

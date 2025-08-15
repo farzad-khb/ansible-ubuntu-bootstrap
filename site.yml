@@ -13,8 +13,6 @@
     - name: "Install python3-pip using raw command"
       ansible.builtin.raw: apt-get update && apt-get install -y python3-pip
       changed_when: false
-      tags:
-        - always
 
 # ==============================================================================
 # PLAY 1: Bootstrap the admin user if they don't exist
@@ -49,3 +47,17 @@
     - common
     - ssh_hardening
     - ufw
+
+
+# ==============================================================================
+# PLAY 3: Configure Docker and Traefik as the new admin user
+# ==============================================================================
+- name: "Configure Docker and Traefik"
+  hosts: servers
+  remote_user: "{{ bootstrap_user }}"
+  tags: infra
+  become: true
+
+  roles:
+    -  docker
+    -  traefik
