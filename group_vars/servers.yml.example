@@ -1,7 +1,7 @@
 ---
 # --- Base Server Configuration ---
-bootstrap_user: "remoteadmin"
-new_ssh_port: 2222
+bootstrap_user: "foobar"
+new_ssh_port: 2223
 
 # --- Traefik Configuration ---
 # Your main domain name
